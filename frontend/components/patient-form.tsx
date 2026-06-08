@@ -139,12 +139,12 @@ export function PatientForm({ value, onChange, onSubmit, loading }: PatientFormP
           options={["Male", "Female"]}
         />
         <NumberField
-          label="Annual income ($)"
-          min={0}
-          step={1000}
-          value={value.annualIncome}
-          onChange={(v) => set("annualIncome", v)}
-        />
+        label="Annual income ($)"
+        min={0}
+        step={1}        // ← change from 1000 to 1
+        value={value.annualIncome}
+        onChange={(v) => set("annualIncome", v)}
+      />
         <NumberField
           label="Charlson score"
           min={0}
