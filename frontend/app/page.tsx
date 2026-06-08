@@ -86,6 +86,7 @@ export default function Page() {
               onChange={setInput}
               onSubmit={handleCalculate}
               loading={loading}
+              onLoadExample={(example) => setInput(example)}
             />
           </section>
 

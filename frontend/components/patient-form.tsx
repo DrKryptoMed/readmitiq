@@ -3,11 +3,62 @@
 import type { PatientInput, Gender } from "@/lib/risk-model"
 import { cn } from "@/lib/utils"
 
+const HIGH_RISK_EXAMPLE: PatientInput = {
+  lengthOfStay: 6,
+  admissionMonth: 2,
+  emergencyAdmission: false,
+  priorAdmissions6m: 3,
+  edVisits6m: 1,
+  daysSinceLastAdmission: 28,
+  heartFailure: false,
+  diabetes: false,
+  copd: false,
+  ckd: true,
+  cancer: true,
+  priorMI: false,
+  medicationCount: 47,
+  anticoagulant: true,
+  insulin: false,
+  diuretic: true,
+  aceInhibitor: false,
+  age: 66,
+  gender: "male",
+  annualIncome: 125393,
+  charlsonScore: 2,
+  activeConditions: 29,
+}
+
+const LOW_RISK_EXAMPLE: PatientInput = {
+  lengthOfStay: 1,
+  admissionMonth: 6,
+  emergencyAdmission: false,
+  priorAdmissions6m: 0,
+  edVisits6m: 0,
+  daysSinceLastAdmission: 999,
+  heartFailure: false,
+  diabetes: false,
+  copd: false,
+  ckd: false,
+  cancer: false,
+  priorMI: false,
+  medicationCount: 2,
+  anticoagulant: false,
+  insulin: false,
+  diuretic: false,
+  aceInhibitor: false,
+  age: 28,
+  gender: "female",
+  annualIncome: 55000,
+  charlsonScore: 0,
+  activeConditions: 1,
+}
+
 interface PatientFormProps {
   value: PatientInput
   onChange: (next: PatientInput) => void
   onSubmit: () => void
   loading?: boolean
+  onLoadExample: (example: PatientInput) => void
 }
 
 const MONTHS = [
@@ -16,7 +67,7 @@ const MONTHS = [
   "September", "October", "November", "December",
 ]
 
-export function PatientForm({ value, onChange, onSubmit, loading }: PatientFormProps) {
+export function PatientForm({ value, onChange, onSubmit, loading, onLoadExample }: PatientFormProps) {
   const set = <K extends keyof PatientInput>(key: K, v: PatientInput[K]) =>
     onChange({ ...value, [key]: v })
 
@@ -30,6 +81,25 @@ export function PatientForm({ value, onChange, onSubmit, loading }: PatientFormP
       }}
       className="flex flex-col gap-6"
     >
+      {/* Example patient loader */}
+      <div className="flex items-center justify-end gap-4">
+        <span className="text-xs text-muted-foreground">Load example:</span>
+        <button
+          type="button"
+          onClick={() => onLoadExample(LOW_RISK_EXAMPLE)}
+          className="text-xs text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+        >
+          Low risk
+        </button>
+        <button
+          type="button"
+          onClick={() => onLoadExample(HIGH_RISK_EXAMPLE)}
+          className="text-xs text-red-400 hover:text-red-300 underline underline-offset-2"
+        >
+          High risk
+        </button>
+      </div>
+
       {/* Admission Details */}
       <Section title="Admission Details">
         <NumberField
@@ -131,7 +201,12 @@ export function PatientForm({ value, onChange, onSubmit, loading }: PatientFormP
 
       {/* Demographics */}
       <Section title="Demographics">
-        <NumberField label="Age at admission" min={18} value={value.age} onChange={(v) => set("age", v)} />
+        <NumberField
+          label="Age at admission"
+          min={18}
+          value={value.age}
+          onChange={(v) => set("age", v)}
+        />
         <Toggle
           label="Gender"
           value={value.gender === "female"}
@@ -139,12 +214,12 @@ export function PatientForm({ value, onChange, onSubmit, loading }: PatientFormP
           options={["Male", "Female"]}
         />
         <NumberField
-        label="Annual income ($)"
-        min={0}
-        step={1}        // ← change from 1000 to 1
-        value={value.annualIncome}
-        onChange={(v) => set("annualIncome", v)}
-      />
+          label="Annual income ($)"
+          min={0}
+          step={1}
+          value={value.annualIncome}
+          onChange={(v) => set("annualIncome", v)}
+        />
         <NumberField
           label="Charlson score"
           min={0}
