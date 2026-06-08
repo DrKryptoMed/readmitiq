@@ -1,0 +1,33 @@
+# Data — never commit patient data
+backend/data/
+*.csv
+*.parquet
+
+# MLflow — machine specific
+backend/notebooks/mlruns/
+mlruns/
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+frontend/tsconfig.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+
+# Models — test outputs only
+backend/models/shap_values_test.csv
+backend/models/test_predictions.csv
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+.vscode/
