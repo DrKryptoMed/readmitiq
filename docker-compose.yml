@@ -1,0 +1,38 @@
+version: "3.9"
+
+# ReadmitIQ — Full stack clinical AI system
+# Run everything with: docker-compose up --build
+#
+# Backend API:  http://localhost:7860
+# Frontend UI:  http://localhost:3000
+# API Docs:     http://localhost:7860/docs
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: readmitiq-backend
+    ports:
+      - "7860:7860"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: readmitiq-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:7860
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
