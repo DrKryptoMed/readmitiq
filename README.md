@@ -36,6 +36,7 @@ The production model is an XGBoost classifier, benchmarked against an interpreta
 | Brier score | 0.103 | 0.108 |
 
 The 0.75 AUC-ROC line is a common clinical-utility benchmark; the production model clears it comfortably. Recall is prioritised over precision by design because in a readmission-prevention setting, a missed high-risk patient is far costlier than a false alarm that triggers a follow-up call.
+See [the model card](backend/MODEL_CARD.md) for full intended-use, fairness, and limitations detail.
 
 ### Explainability
 
